@@ -1,0 +1,124 @@
+INSERT INTO [dbo].[DEPOLAR] (
+    [dep_Guid],           -- Benzersiz kimlik (GUID)
+    [dep_DBCno],          -- Veritabanı numarası
+    [dep_SpecRECno],      -- Özel kayıt numarası
+    [dep_iptal],          -- İptal durumu (0 = aktif)
+    [dep_fileid],         -- Dosya ID
+    [dep_hidden],         -- Gizli mi? (0 = hayır)
+    [dep_kilitli],        -- Kilitli mi? (0 = hayır)
+    [dep_degisti],        -- Değişti mi? (0 = hayır)
+    [dep_checksum],       -- Veri bütünlüğü için
+    [dep_create_user],    -- Oluşturan kullanıcı ID
+    [dep_create_date],    -- Oluşturulma tarihi
+    [dep_lastup_user],    -- Son güncelleyen kullanıcı ID
+    [dep_lastup_date],    -- Son güncelleme tarihi
+    [dep_special1],       -- Özel alan 1
+    [dep_special2],       -- Özel alan 2
+    [dep_special3],       -- Özel alan 3
+    [dep_firmano],        -- Firma numarası
+    [dep_subeno],         -- Şube numarası
+    [dep_no],             -- Depo numarası
+    [dep_adi],            -- Depo adı
+    [dep_grup_kodu],      -- Grup kodu
+    [dep_tipi],           -- Depo tipi (örneğin 1=ana depo)
+    [dep_DepoSevkOtoFiyat], -- Sevk fiyat tipi
+    [dep_hareket_tipi],   -- Hareket tipi
+    [dep_muh_kodu],       -- Muhasebe kodu
+    [dep_sor_mer_kodu],   -- Sorumlu merkez kodu
+    [dep_proje_kodu],     -- Proje kodu
+    [dep_DepoSevkUygFiyat], -- Uygulanan sevk fiyatı
+    [dep_KilitTarihi],    -- Kilit tarihi (NULL ise kilitli değil)
+    [dep_cadde],          -- Cadde adı
+    [dep_mahalle],        -- Mahalle adı
+    [dep_sokak],          -- Sokak adı
+    [dep_Semt],           -- Semt adı
+    [dep_Apt_No],         -- Apartman numarası
+    [dep_Daire_No],       -- Daire numarası
+    [dep_posta_Kodu],     -- Posta kodu
+    [dep_Ilce],           -- İlçe
+    [dep_Il],             -- İl
+    [dep_Ulke],           -- Ülke
+    [dep_Adres_kodu],     -- Adres kodu
+    [dep_gps_enlem],      -- GPS enlem
+    [dep_gps_boylam],     -- GPS boylam
+    [dep_alani],          -- Depo alanı (m²)
+    [dep_rafhacmi],       -- Raf hacmi (m³)
+    [dep_yetkili_email],  -- Yetkili e-posta adresi
+    [dep_satis_alani],    -- Satış alanı (m²)
+    [dep_sergi_alani],    -- Sergi alanı (m²)
+    [dep_otopark_alani],  -- Otopark alanı (m²)
+    [dep_otopark_kapasite], -- Otopark kapasitesi
+    [dep_kasa_sayisi],    -- Kasa sayısı
+    [dep_kamyon_kasa_hacmi], -- Kamyon kasa hacmi (m³)
+    [dep_kamyon_istiab_haddi], -- Kamyon taşıma kapasitesi (ton)
+    [dep_dizin_adi],      -- Dizin adı
+    [dep_tel_ulke_kodu],  -- Telefon ülke kodu
+    [dep_tel_bolge_kodu], -- Telefon bölge kodu
+    [dep_tel_no1],        -- Telefon numarası 1
+    [dep_tel_no2],        -- Telefon numarası 2
+    [dep_tel_faxno],      -- Fax numarası
+    [dep_tel_modem],      -- Modem hattı
+    [dep_envanter_harici_fl], -- Envanter harici mi? (0=Hayır)
+    [dep_detay_takibi],   -- Detay takibi (1=Aktif)
+    [dep_barkod_yazici_yolu], -- Barkod yazıcı yolu
+    [dep_fason_sor_mer_kodu], -- Fason sorumlu merkez kodu
+    [dep_EksiyeDusurenStkHar], -- Eksiye düşüren stok hareketi (1=Evet)
+    [dep_BagliOrtakliklaraSatisUygFiyat], -- Bağlı ortaklığa satış fiyatı (0=Hayır)
+    [dep_bolge_kodu],     -- Bölge kodu
+    [dep_NakliyefisiSatisFiyatTipi], -- Nakliye fişi satış fiyat tipi
+    [dep_gidiste_eirsaliye_fl], -- Gidişte e-irsaliye kullanımı (1=Evet)
+    [dep_geliste_eirsaliye_fl], -- Gelişte e-irsaliye kullanımı (1=Evet)
+    [dep_fytdegfis_kullanilmaz_fl], -- Fiyat değişim fişi kullanımı (0=Kullanılır)
+    [dep_seribag_detay_takibi], -- Seri-bağlantı detay takibi (1=Evet)
+    [dep_dikeycozum_raftakibi_zorunlu_fl] -- Dikey çözüm raf takibi zorunlu mu (1=Evet)
+)
+VALUES (
+    NEWID(),                  -- dep_Guid: benzersiz kimlik
+    1,                        -- dep_DBCno: veritabanı numarası
+    0,                        -- dep_SpecRECno: özel kayıt no
+    0,                        -- dep_iptal: iptal durumu (false)
+    1,                        -- dep_fileid: dosya id
+    0,                        -- dep_hidden: gizli mi (false)
+    0,                        -- dep_kilitli: kilitli mi (false)
+    0,                        -- dep_degisti: değişti mi (false)
+    0,                        -- dep_checksum: veri bütünlüğü için
+    1,                        -- dep_create_user: oluşturan kullanıcı ID
+    GETDATE(),                -- dep_create_date: oluşturulma tarihi
+    1,                        -- dep_lastup_user: son güncelleyen kullanıcı ID
+    GETDATE(),                -- dep_lastup_date: son güncelleme tarihi
+    N'',                      -- dep_special1: özel alan 1
+    N'',                      -- dep_special2: özel alan 2
+    N'',                      -- dep_special3: özel alan 3
+    1,                        -- dep_firmano: firma numarası
+    1,                        -- dep_subeno: şube numarası
+    100,                      -- dep_no: depo numarası
+    N'Merkez Depo',           -- dep_adi: depo adı
+    N'GRP001',                -- dep_grup_kodu: grup kodu
+    1,                        -- dep_tipi: depo tipi (1=ana depo)
+    1,                        -- dep_DepoSevkOtoFiyat: sevk fiyat tipi
+    0,                        -- dep_hareket_tipi: hareket tipi
+    N'',                      -- dep_muh_kodu: muhasebe kodu
+    N'',                      -- dep_sor_mer_kodu: sorumlu merkez kodu
+    N'',                      -- dep_proje_kodu: proje kodu
+    1,                        -- dep_DepoSevkUygFiyat: uygulanan sevk fiyatı
+    NULL,                     -- dep_KilitTarihi: kilit tarihi (null)
+    N'İnönü Caddesi',         -- dep_cadde: cadde
+    N'Atatürk Mah.',          -- dep_mahalle: mahalle
+    N'Gül Sokak',             -- dep_sokak: sokak
+    N'Kadıköy',               -- dep_Semt: semt
+    N'10A',                   -- dep_Apt_No: apartman no
+    N'5',                     -- dep_Daire_No: daire no
+    N'34710',                 -- dep_posta_Kodu: posta kodu
+    N'Kadıköy',               -- dep_Ilce: ilçe
+    N'İstanbul',              -- dep_Il: il
+    N'Türkiye',               -- dep_Ulke: ülke
+    N'',                      -- dep_Adres_kodu: adres kodu
+    0,                        -- dep_gps_enlem: enlem
+    0,                        -- dep_gps_boylam: boylam
+    0,                        -- dep_alani: depo alanı (m2)
+    0,                        -- dep_rafhacmi: raf hacmi (m3)
+    N'',                      -- dep_yetkili_email: yetkili email
+    0,                        -- dep_satis_alani: satış alanı (m2)
+    0,                        -- dep_sergi_alani: sergi alanı (m2)
+    0,                        -- dep_otopark_alani: otopark alanı (m2)
+    0,                        -- dep_otopark_k
