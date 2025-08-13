@@ -41,7 +41,7 @@ Mikro Muhasebe, gelir-gider dengesi, bilanço, kar-zarar ve nakit akış raporla
 
 ## Program Versiyonları
 ![Örnek Mikro V16 Giriş](assets/ornV16GIRIS.png)
-![Örnek Mikro V16 Yapısı](assets/v16ekran.png)
+![Örnek Mikro V16 Yapısı](assets/V16ekran.png)
 ![Örnek Mikro V17 Giriş](assets/ornV17GIRIS.png)
 ![Örnek Mikro V17 Yapısı](assets/v17ekran.png)
 Mikro Yazılım, farklı işletme ölçekleri ve ihtiyaçlarına uygun olarak çeşitli program versiyonları sunar.
