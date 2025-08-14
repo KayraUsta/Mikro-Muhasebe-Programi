@@ -41,7 +41,7 @@ Mikro Muhasebe, gelir-gider dengesi, bilanço, kar-zarar ve nakit akış raporla
 
 ## Program Versiyonları
 ![Örnek Mikro V16 Giriş](assets/ornV16GIRIS.png)
-![Örnek Mikro V16 Yapısı](assets/V16ekran.png)
+![Örnek Mikro V16 Yapısı](assets/v16ekran.png)
 ![Örnek Mikro V17 Giriş](assets/ornV17GIRIS.png)
 ![Örnek Mikro V17 Yapısı](assets/v17ekran.png)
 Mikro Yazılım, farklı işletme ölçekleri ve ihtiyaçlarına uygun olarak çeşitli program versiyonları sunar.
@@ -112,3 +112,80 @@ Mikro Muhasebe Programı’nın veritabanı yapısı, birbirine bağlı tablolar
   Eğer bir tablo içinde satır satır veri tutuluyorsa, satır numarası alanı dikkate alınır ve bu alan satırların doğru sıralanması için kullanılır.  
 
 Bu yapı sayesinde, veriler hem tutarlı hem de ilişkilendirilmiş biçimde saklanır, INSERT işlemleri güvenli ve doğru şekilde gerçekleştirilir.  
+
+---
+
+## Tablo Yapısı
+
+Mikro, çoğunlukla **MS SQL** veritabanlarını kullanır. Bu veritabanları, genelde **firma bazında** veya kullanıma bağlı olarak **yıl bazında** kullanılabilir.  
+
+V17 tablo yapısının, %95 oranında V16 ile benzerlik gösterdiğini gözlemleyebiliriz. Ancak **2025 yılı itibarıyla V16 tablo yapısı** hakkında daha fazla bilgi sahibiyiz.  
+V16’da **1198 adet tablo** bulunur. Bu tabloların içinde **özet tablolar** ve **ek tablolar** da yer almaktadır. Bu özet ve ek tablolar, genelde işlemlerin **sıkı** ve **koşullu** olarak takip edilmesini sağlar.
+
+Tabloların içindeki **INDEX** bilgileri, **UNIQUE** alanları ayıklar. Kullanılan, seçilebilen ve eklenip çıkarılabilen, kısaca saklanan her alan için veritabanı tutulmaktadır.
+
+**Örnek:**  
+- Bir fatura keserken girilen **gider masraf kodları** ayrı bir tabloda tutulurken,  
+- Fatura kesilen **cari** ayrı bir tabloda tutulur.  
+- **Hareketler tabloları** ise bu bilgilerin toplamını içerir ve daha sıkı, koşullu şekilde tutulur.
+
+Bu nedenle, **INSERT** açısından hareket tabloları daha fazla kısıtlamaya sahiptir.  
+Örnek tablo ilişkileri:
+- **STOKLAR** → **DEPOLAR**
+- **SUBELER** → **URUNLER**
+- **PARTILOT** → **URETIM_TALEPLERI**
+
+**Hareket tabloları örnekleri:**
+- `CARI_HESAP_HAREKETLERI`  
+- `STOK_HAREKETLERI`
+
+Örneğin, bir masraf faturası `CARI_HESAP_HAREKETLERI` tablosuna kaydedilir.  
+SQL üzerinden dışarıdan kayıt eklenmek istendiğinde, bu tablonun özet tablosuna da veri eklenir. Hareket bazlı olduğundan, **koruma koşulu daha fazladır**. Bu sebeple, Mikro dışından (ör. BPM uygulaması) kayıt eklemek daha zordur.
+
+📌 **Not:** 1198 tabloya şu adresten ulaşabilirsiniz:  
+[https://www.perteknoloji.com/MikroV16Tablo/DBYapisi_V16/tablo.html](https://www.perteknoloji.com/MikroV16Tablo/DBYapisi_V16/tablo.html)
+![Mikro Tablo Yapısı](assets/tablo.png)
+---
+
+## Rapor Yapısı
+
+**MS SQL** veritabanlarında, tablolar kadar **rapor menülerindeki fonksiyonlar** da önemlidir.  
+Bu fonksiyonlar, genellikle kullanıcıya rapor çekiminde kolaylık sağlamak için birden fazla tablonun birleşiminden oluşur.
+
+- Fonksiyonlar **modify** edilirse, raporlar da değişmiş olur.  
+  *Örnek:* Bir fatura raporuna **evrak serisi** eklemek.  
+- Fonksiyon ile olmayan, Mikro’nun kendi iç raporları da bulunur.  
+  - Bu raporlar **parametre ister** (ör. tarih).  
+  - “Rapor Al” tuşu ile çalıştırılır.  
+  - “Ayarlar” ve “Kriterler” menüsünden filtreler belirlenir.  
+  - “Sorgu Ekle” ile özel sorgular eklenebilir.
+
+⚠️ **Uyarı:** Ana yapıyı bozmadan kullanmak önerilir. Çünkü güncellemeler ile yapılan değişiklikler sıfırlanabilir ve hatalara yol açabilir.
+
+---
+
+## Sürüm ve Versiyon Güncellemeleri
+
+![Mikro Sürüm Güncellemeleri 1](assets/surum1.png)
+![Mikro Sürüm Güncellemeleri 2](assets/surum2.png)
+
+Sürüm güncellemeleri şu adresten takip edilebilir:  
+[https://www.mikro.com.tr/surum-guncellemeleri/](https://www.mikro.com.tr/surum-guncellemeleri/)  
+
+Ayrıca, program kendi içinde de yeni sürüm geldiğinde **otomatik uyarı** verir.
+
+**Sürüm Güncelleme Adımları:**
+1. İlgili versiyon, kullanım ve sürüm seçilir (örn. *Versiyon 16 Mikro Run 16.38a*).  
+2. Bit (32/64) seçimi yapılır.  
+3. **Servis** ve **Client** exe dosyaları indirilir.  
+4. Sunucuda önce **servis**, ardından **client** çalıştırılır.  
+5. Server dışındaki kullanıcı bilgisayarlarına **client** tekrar kurulur.
+
+Bu işlem, Mikro tarafından yeni sürüm çıktıkça tekrarlanır.
+
+**Versiyon Güncellemeleri:**
+- Daha seyrek çıkar.  
+- Sürüm güncellemelerine göre daha büyük değişiklikler içerir.  
+- Geçişlerde, destek alınan firmadan yardım alınması önerilir.
+
+---
