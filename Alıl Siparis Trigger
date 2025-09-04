@@ -1,0 +1,358 @@
+USE [EFlow]
+GO
+/****** Object:  Trigger [dbo].[trg_BDK_To_SIPARIS_OnDurum3_2]    Script Date: 04.09.2025 09:57:15 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+ALTER TRIGGER [dbo].[trg_BDK_To_SIPARIS_OnDurum3_2]
+ON [dbo].[BAKIM_DURUM_KONTROL]
+AFTER UPDATE
+AS
+BEGIN
+    SET NOCOUNT ON;
+    IF TRIGGER_NESTLEVEL() > 1 RETURN;
+
+    BEGIN TRY
+
+        DECLARE @SipSeri NVARCHAR(20) = N'BKS 25';
+        DECLARE @SaticiKod NVARCHAR(50) = N'P-00420';
+        DECLARE @StokKod NVARCHAR(50) = N'ZAS11.011';
+        DECLARE @DepoNo INT = 1;
+        DECLARE @CariSM NVARCHAR(20) = N'BKM';
+        DECLARE @StokSM NVARCHAR(20) = N'BKM';
+        DECLARE @OnaylayanKulNo INT = 9;
+        DECLARE @VergiPntr INT = 6;
+        DECLARE @DovizCinsi INT = 0;
+        DECLARE @DovizKuru DECIMAL(18,6) = 1;
+        DECLARE @AltDovizKuru DECIMAL(18,6) = 1;
+
+        DECLARE @ToInsert TABLE (
+            surec_id NVARCHAR(120),
+            cari_kod NVARCHAR(50),
+            bayi_kod INT,
+            z_baslangic DATE,
+            sip_tarih DATE,
+            teslim_tarih DATE,
+            net DECIMAL(18,2),
+            kdv DECIMAL(18,2)
+        );
+
+        INSERT INTO @ToInsert
+        SELECT 
+            i.surec_id,
+            i.cari_kod,
+            i.tesis,
+            CONVERT(DATE, z.islem_baslangic_tarihi),
+            CONVERT(DATE, z.islem_baslangic_tarihi),
+            EOMONTH(z.islem_baslangic_tarihi),
+            CAST(mb.bakım_bedeli / 1.20 AS DECIMAL(18,2)),
+            CAST(mb.bakım_bedeli - (mb.bakım_bedeli / 1.20) AS DECIMAL(18,2))
+        FROM inserted i
+        LEFT JOIN deleted d ON d.surec_id = i.surec_id
+        INNER JOIN MUSTERI_BILGI mb ON mb.cari_kod = i.cari_kod AND mb.bayi_kod = i.tesis
+        INNER JOIN BDK_ZAMAN z ON z.surec_id = i.surec_id
+        WHERE i.durum3 = 2
+          AND (d.durum3 IS NULL OR d.durum3 <> 2)
+          AND z.islem_baslangic_tarihi IS NOT NULL
+          AND mb.bakım_bedeli IS NOT NULL
+          AND ISNULL(mb.durum3, N'') <> N'Peşin'
+          AND ISNULL(mb.durum, 1) <> 0;
+
+        IF NOT EXISTS (SELECT 1 FROM @ToInsert)
+            RETURN;
+			 IF EXISTS (
+            SELECT 1 FROM MikroDesktop_GM_2025.dbo.SIPARISLER s
+            INNER JOIN @ToInsert t ON s.sip_belgeno = t.surec_id
+            WHERE s.sip_evrakno_seri = @SipSeri
+        )
+        BEGIN
+            UPDATE b
+            SET b.durum3 = 3
+            FROM BAKIM_DURUM_KONTROL b
+            INNER JOIN @ToInsert t ON b.surec_id = t.surec_id;
+            RETURN;
+        END
+
+        DECLARE @BaseSira INT;
+        SELECT @BaseSira = ISNULL(MAX(sip_evrakno_sira), 0)
+        FROM MikroDesktop_GM_2025.dbo.SIPARISLER WITH (UPDLOCK, HOLDLOCK)
+        WHERE sip_evrakno_seri = @SipSeri;
+
+        INSERT INTO MikroDesktop_GM_2025.dbo.SIPARISLER (
+    sip_Guid,                   -- Sipariş için benzersiz kimlik (GUID)
+    sip_DBCno,                  -- Veritabanı numarası
+    sip_SpecRECno,              -- Özel kayıt numarası
+    sip_iptal,                  -- Sipariş iptal durumu (0: İptal değil)
+    sip_fileid,                 -- Dosya kimliği
+    sip_hidden,                 -- Gizli mi? (0: Hayır)
+    sip_kilitli,                -- Kilitli mi? (0: Hayır)
+    sip_degisti,                -- Değiştirildi mi? (0: Hayır)
+    sip_checksum,               -- Kontrol toplamı
+    sip_create_user,            -- Oluşturan kullanıcı
+    sip_create_date,            -- Oluşturma tarihi
+    sip_lastup_user,            -- Son güncelleyen kullanıcı
+    sip_lastup_date,            -- Son güncelleme tarihi
+    sip_special1,               -- Özel alan 1
+    sip_special2,               -- Özel alan 2
+    sip_special3,               -- Özel alan 3
+    sip_MainProgramNo,          -- Ana program numarası
+    sip_VersionNo,              -- Versiyon numarası
+    sip_MenuNo,                 -- Menü numarası
+    sip_MikroSpecial1,          -- Mikro özel alan 1
+    sip_MikroSpecial2,          -- Mikro özel alan 2
+    sip_MikroSpecial3,          -- Mikro özel alan 3
+    sip_ExternalProgramType,    -- Harici program tipi
+    sip_ExternalProgramId,      -- Harici program kimliği
+    sip_Hash,                   -- Hash değeri
+    sip_firmano,                -- Firma numarası
+    sip_subeno,                 -- Şube numarası
+    sip_tarih,                  -- Sipariş tarihi
+    sip_teslim_tarih,           -- Teslim tarihi
+    sip_tip,                    -- Sipariş tipi
+    sip_cins,                   -- Sipariş cinsi
+    sip_evrakno_seri,           -- Evrak numarası seri
+    sip_evrakno_sira,           -- Evrak numarası sıra
+    sip_satirno,                -- Satır numarası
+    sip_belgeno,                -- Belge numarası
+    sip_belge_tarih,            -- Belge tarihi
+    sip_satici_kod,             -- Satıcı kodu
+    sip_musteri_kod,            -- Müşteri kodu
+    sip_stok_kod,               -- Stok kodu
+    sip_b_fiyat,                -- Birim fiyat
+    sip_miktar,                 -- Miktar
+    sip_birim_pntr,             -- Birim pointer
+    sip_teslim_miktar,          -- Teslim edilen miktar
+    sip_tutar,                  -- Toplam tutar
+    sip_iskonto_1,              -- İskonto 1
+    sip_iskonto_2,              -- İskonto 2
+    sip_iskonto_3,              -- İskonto 3
+    sip_iskonto_4,              -- İskonto 4
+    sip_iskonto_5,              -- İskonto 5
+    sip_iskonto_6,              -- İskonto 6
+    sip_masraf_1,               -- Masraf 1
+    sip_masraf_2,               -- Masraf 2
+    sip_masraf_3,               -- Masraf 3
+    sip_masraf_4,               -- Masraf 4
+	sip_isk1,
+    sip_isk2,
+    sip_isk3,
+    sip_isk4,
+    sip_isk5,
+    sip_isk6,
+    sip_mas1,
+    sip_mas2,
+    sip_mas3,
+    sip_mas4,
+    sip_vergi_pntr,             -- Vergi pointer
+    sip_vergi,                  -- Vergi miktarı
+    sip_masvergi_pntr,          -- Masraf vergisi pointer
+    sip_masvergi,               -- Masraf vergisi
+    sip_opno,                   -- Operasyon numarası
+    sip_aciklama,               -- Açıklama
+    sip_aciklama2,              -- Açıklama 2
+    sip_depono,                 -- Depo numarası
+    sip_OnaylayanKulNo,         -- Onaylayan kullanıcı numarası
+    sip_vergisiz_fl,            -- Vergisiz flag (0: Hayır)
+    sip_kapat_fl,               -- Kapalı flag (0: Hayır)
+    sip_promosyon_fl,           -- Promosyon flag (0: Hayır)
+    sip_cari_sormerk,           -- Cari sorumluluk merkezi
+    sip_stok_sormerk,           -- Stok sorumluluk merkezi
+    sip_cari_grupno,            -- Cari grup numarası
+    sip_doviz_cinsi,            -- Döviz cinsi
+    sip_doviz_kuru,             -- Döviz kuru
+    sip_alt_doviz_kuru,         -- Alternatif döviz kuru
+    sip_adresno,                -- Adres numarası
+    sip_teslimturu,             -- Teslim türü
+    sip_cagrilabilir_fl,        -- Çağrılabilir flag (0: Hayır)
+    sip_prosip_uid,             -- Proforma sipariş UID
+    sip_Exp_Imp_Kodu,           -- İhracat/İthalat kodu
+    sip_kar_orani,              -- Kâr oranı
+    sip_durumu,                 -- Sipariş durumu
+    sip_stal_uid,               -- Stok alış UID
+    sip_planlananmiktar,        -- Planlanan miktar
+    sip_teklif_uid,             -- Teklif UID
+    sip_parti_kodu,             -- Parti kodu
+    sip_lot_no,                 -- Lot numarası
+    sip_projekodu,              -- Proje kodu
+    sip_fiyat_liste_no,         -- Fiyat liste numarası
+	sip_Otv_Pntr
+    ,sip_Otv_Vergi
+    ,sip_otvtutari
+    ,sip_OtvVergisiz_Fl
+    ,sip_paket_kod
+    ,sip_Rez_uid
+    ,sip_harekettipi
+    ,sip_yetkili_uid
+    ,sip_kapatmanedenkod
+    ,sip_gecerlilik_tarihi
+    ,sip_onodeme_evrak_tip
+    ,sip_onodeme_evrak_seri
+    ,sip_onodeme_evrak_sira
+    ,sip_rezervasyon_miktari
+    ,sip_rezerveden_teslim_edilen
+    ,sip_HareketGrupKodu1
+    ,sip_HareketGrupKodu2
+    ,sip_HareketGrupKodu3
+    ,sip_Olcu1
+    ,sip_Olcu2
+    ,sip_Olcu3
+    ,sip_Olcu4
+    ,sip_Olcu5
+    ,sip_FormulMiktarNo
+    ,sip_FormulMiktar
+    ,sip_satis_fiyat_doviz_cinsi
+    ,sip_satis_fiyat_doviz_kuru
+    ,sip_eticaret_kanal_kodu
+    ,sip_Tevkifat_turu
+    ,sip_otv_tevkifat_turu
+    ,sip_otv_tevkifat_tutari
+    ,sip_tevkifat_sifirlandi_fl
+
+    ,sip_miktar2                 -- İkinci miktar
+	,sip_avans_tutari
+
+)
+SELECT
+    NEWID(),                    -- sip_Guid: Yeni benzersiz kimlik oluşturur
+    0,                          -- sip_DBCno: Veritabanı numarası, sabit 0
+    0,                          -- sip_SpecRECno: Özel kayıt numarası, sabit 0
+    0,                          -- sip_iptal: Sipariş iptal durumu, 0 (iptal değil)
+    21,                         -- sip_fileid: Dosya kimliği, sabit 21
+    0,                          -- sip_hidden: Gizli mi, 0 (gizli değil)
+    0,                          -- sip_kilitli: Kilitli mi, 0 (kilitli değil)
+    0,                          -- sip_degisti: Değiştirildi mi, 0 (değiştirilmedi)
+    0,                          -- sip_checksum: Kontrol toplamı, sabit 0
+    1,                          -- sip_create_user: Oluşturan kullanıcı, sabit 1
+    GETDATE(),                  -- sip_create_date: Oluşturma tarihi, mevcut tarih
+    1,                          -- sip_lastup_user: Son güncelleyen kullanıcı, sabit 1
+    GETDATE(),                  -- sip_lastup_date: Son güncelleme tarihi, mevcut tarih
+    CAST(t.bayi_kod AS NVARCHAR(50)), -- sip_special1: Bayi kodu, NVARCHAR(50) türüne çevrilir
+    N'',                        -- sip_special2: Özel alan 2, boş
+    N'',                        -- sip_special3: Özel alan 3, boş
+    21,                         -- sip_MainProgramNo: Ana program numarası, sabit 21
+    N'17.04c',                  -- sip_VersionNo: Versiyon numarası, sabit '17.04b'
+    31110,                      -- sip_MenuNo: Menü numarası, sabit 31110
+    N'',                        -- sip_MikroSpecial1: Mikro özel alan 1, boş
+    N'',                        -- sip_MikroSpecial2: Mikro özel alan 2, boş
+    N'',                        -- sip_MikroSpecial3: Mikro özel alan 3, boş
+    0,                          -- sip_ExternalProgramType: Harici program tipi, sabit 0
+    0,                          -- sip_ExternalProgramId: Harici program kimliği, sabit 0
+    0,                          -- sip_Hash: Hash değeri, sabit 0
+    0,                          -- sip_firmano: Firma numarası, sabit 0
+    0,                          -- sip_subeno: Şube numarası, sabit 0
+    t.sip_tarih,                -- sip_tarih: Sipariş tarihi, tablodan alınır
+    t.teslim_tarih,             -- sip_teslim_tarih: Teslim tarihi, tablodan alınır
+    0,                          -- sip_tip: Sipariş tipi, sabit 0
+    0,                          -- sip_cins: Sipariş cinsi, sabit 0
+    @SipSeri,                   -- sip_evrakno_seri: Evrak numarası seri, parametreden alınır
+    @BaseSira + ROW_NUMBER() OVER (ORDER BY t.surec_id), -- sip_evrakno_sira: Evrak numarası sıra, temel sıra + sıralı numara
+    0,                          -- sip_satirno: Satır numarası, sabit 0
+    t.surec_id,                 -- sip_belgeno: Belge numarası, tablodan süreç ID
+    t.sip_tarih,                -- sip_belge_tarih: Belge tarihi, tablodan alınır
+    @SaticiKod,                 -- sip_satici_kod: Satıcı kodu, parametreden alınır
+    t.cari_kod,                 -- sip_musteri_kod: Müşteri kodu, tablodan alınır
+    @StokKod,                   -- sip_stok_kod: Stok kodu, parametreden alınır
+    t.net,                      -- sip_b_fiyat: Birim fiyat, tablodan alınır
+    1,                          -- sip_miktar: Miktar, sabit 1
+    1,                          -- sip_birim_pntr: Birim pointer, sabit 1
+    0,                          -- sip_teslim_miktar: Teslim edilen miktar, sabit 0
+    t.net,                      -- sip_tutar: Toplam tutar, tablodan alınır
+    0,                          -- sip_iskonto_1: İskonto 1, sabit 0
+    0,                          -- sip_iskonto_2: İskonto 2, sabit 0
+    0,                          -- sip_iskonto_3: İskonto 3, sabit 0
+    0,                          -- sip_iskonto_4: İskonto 4, sabit 0
+    0,                          -- sip_iskonto_5: İskonto 5, sabit 0
+    0,                          -- sip_iskonto_6: İskonto 6, sabit 0
+    0,                          -- sip_masraf_1: Masraf 1, sabit 0
+    0,                          -- sip_masraf_2: Masraf 2, sabit 0
+    0,                          -- sip_masraf_3: Masraf 3, sabit 0
+    0,                          -- sip_masraf_4: Masraf 4, sabit 0
+	0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    @VergiPntr,                 -- sip_vergi_pntr: Vergi pointer, parametreden alınır
+    t.kdv,                      -- sip_vergi: Vergi miktarı, tablodan alınır
+    0,                          -- sip_masvergi_pntr: Masraf vergisi pointer, sabit 0
+    0,                          -- sip_masvergi: Masraf vergisi, sabit 0
+    0,                          -- sip_opno: Operasyon numarası, sabit 0
+    FORMAT(t.sip_tarih, N'yyyy MMMM', 'tr-TR') + N' Ayı Bakım Faturası', -- sip_aciklama: Açıklama, tarih formatlı bakım faturası
+    FORMAT(t.sip_tarih, N'yyyy MMMM', 'tr-TR') + N' Ayı Bakım Faturası', -- sip_aciklama2: Açıklama 2, tarih formatlı bakım faturası
+    @DepoNo,                    -- sip_depono: Depo numarası, parametreden alınır
+    @OnaylayanKulNo,            -- sip_OnaylayanKulNo: Onaylayan kullanıcı numarası, parametreden alınır
+    0,                          -- sip_vergisiz_fl: Vergisiz flag, sabit 0 (vergisiz değil)
+    0,                          -- sip_kapat_fl: Kapalı flag, sabit 0 (kapalı değil)
+    0,                          -- sip_promosyon_fl: Promosyon flag, sabit 0 (promosyon değil)
+    @CariSM,                    -- sip_cari_sormerk: Cari sorumluluk merkezi, parametreden alınır
+    @StokSM,                    -- sip_stok_sormerk: Stok sorumluluk merkezi, parametreden alınır
+    0,                          -- sip_cari_grupno: Cari grup numarası, sabit 0
+    @DovizCinsi,                -- sip_doviz_cinsi: Döviz cinsi, parametreden alınır
+    @DovizKuru,                 -- sip_doviz_kuru: Döviz kuru, parametreden alınır
+    @AltDovizKuru,              -- sip_alt_doviz_kuru: Alternatif döviz kuru, parametreden alınır
+    1,                          -- sip_adresno: Adres numarası, sabit 0
+    N'',                          -- sip_teslimturu: Teslim türü, sabit 0
+    0,                          -- sip_cagrilabilir_fl: Çağrılabilir flag, sabit 0 (çağrılabilir değil)
+    CAST('00000000-0000-0000-0000-000000000000' AS uniqueidentifier), -- sip_prosip_uid: Proforma sipariş UID, boş GUID
+    N'',                        -- sip_Exp_Imp_Kodu: İhracat/İthalat kodu, boş
+    0,                          -- sip_kar_orani: Kâr oranı, sabit 0
+    0,                          -- sip_durumu: Sipariş durumu, sabit 0
+    CAST('00000000-0000-0000-0000-000000000000' AS uniqueidentifier), -- sip_stal_uid: Stok alış UID, boş GUID
+    0,                          -- sip_planlananmiktar: Planlanan miktar, sabit 0
+    CAST('00000000-0000-0000-0000-000000000000' AS uniqueidentifier), -- sip_teklif_uid: Teklif UID, boş GUID
+    N'',                        -- sip_parti_kodu: Parti kodu, boş
+    0,                          -- sip_lot_no: Lot numarası, sabit 0
+    N'',                        -- sip_projekodu: Proje kodu, boş
+    0,                          -- sip_fiyat_liste_no: Fiyat liste numarası, sabit 0
+	0
+    ,0
+    ,0
+    ,0
+    ,N''
+    , CAST('00000000-0000-0000-0000-000000000000' AS uniqueidentifier)
+    ,0
+    , CAST('00000000-0000-0000-0000-000000000000' AS uniqueidentifier)
+    ,N''
+    ,'1899-12-30 00:00:00.000'
+    ,0
+    ,N''
+    ,0
+    ,0
+    ,0
+    ,N''
+    ,N''
+    ,N''
+    ,0
+    ,0
+    ,0
+    ,0
+    ,0
+    ,0
+    ,0
+    ,0
+    ,0
+    ,N''
+    ,0
+    ,0
+    ,0
+    ,0
+    ,1                           -- sip_miktar2: İkinci miktar, sabit 1
+	,0
+FROM @ToInsert t;
+UPDATE b
+        SET b.durum3 = 3
+        FROM BAKIM_DURUM_KONTROL b
+        INNER JOIN @ToInsert t ON b.surec_id = t.surec_id;
+
+    END TRY
+    BEGIN CATCH
+        PRINT N'trg_BDK_To_SIPARIS_OnDurum3_2 hata: ' + ERROR_MESSAGE();
+    END CATCH
+END
