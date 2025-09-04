@@ -1,0 +1,248 @@
+INSERT INTO CARI_HESAPLAR(
+    cari_Guid, cari_DBCno, cari_SpecRECno, cari_iptal, cari_fileid, 
+    cari_hidden, cari_kilitli, cari_degisti, cari_checksum, 
+    cari_create_user, cari_create_date, cari_lastup_user, 
+    cari_lastup_date, cari_special1, cari_special2, cari_special3, 
+    cari_kod, cari_unvan1, cari_unvan2, cari_hareket_tipi, 
+    cari_baglanti_tipi, cari_stok_alim_cinsi, cari_stok_satim_cinsi, 
+    cari_muh_kod, cari_muh_kod1, cari_muh_kod2, cari_doviz_cinsi, 
+    cari_doviz_cinsi1, cari_doviz_cinsi2, cari_vade_fark_yuz, 
+    cari_vade_fark_yuz1, cari_vade_fark_yuz2, cari_KurHesapSekli, 
+    cari_vdaire_adi, cari_vdaire_no, cari_sicil_no, cari_VergiKimlikNo, 
+    cari_satis_fk, cari_odeme_cinsi, cari_odeme_gunu, cari_odemeplan_no, 
+    cari_opsiyon_gun, cari_cariodemetercihi, cari_fatura_adres_no, 
+    cari_sevk_adres_no, cari_banka_tcmb_kod1, cari_banka_tcmb_subekod1, 
+    cari_banka_tcmb_ilkod1, cari_banka_hesapno1, cari_banka_swiftkodu1, 
+    cari_banka_tcmb_kod2, cari_banka_tcmb_subekod2, cari_banka_tcmb_ilkod2, 
+    cari_banka_hesapno2, cari_banka_swiftkodu2, cari_banka_tcmb_kod3, 
+    cari_banka_tcmb_subekod3, cari_banka_tcmb_ilkod3, cari_banka_hesapno3, 
+    cari_banka_swiftkodu3, cari_banka_tcmb_kod4, cari_banka_tcmb_subekod4, 
+    cari_banka_tcmb_ilkod4, cari_banka_hesapno4, cari_banka_swiftkodu4, 
+    cari_banka_tcmb_kod5, cari_banka_tcmb_subekod5, cari_banka_tcmb_ilkod5, 
+    cari_banka_hesapno5, cari_banka_swiftkodu5, cari_banka_tcmb_kod6, 
+    cari_banka_tcmb_subekod6, cari_banka_tcmb_ilkod6, cari_banka_hesapno6, 
+    cari_banka_swiftkodu6, cari_banka_tcmb_kod7, cari_banka_tcmb_subekod7, 
+    cari_banka_tcmb_ilkod7, cari_banka_hesapno7, cari_banka_swiftkodu7, 
+    cari_banka_tcmb_kod8, cari_banka_tcmb_subekod8, cari_banka_tcmb_ilkod8, 
+    cari_banka_hesapno8, cari_banka_swiftkodu8, cari_banka_tcmb_kod9, 
+    cari_banka_tcmb_subekod9, cari_banka_tcmb_ilkod9, cari_banka_hesapno9, 
+    cari_banka_swiftkodu9, cari_banka_tcmb_kod10, cari_banka_tcmb_subekod10, 
+    cari_banka_tcmb_ilkod10, cari_banka_hesapno10, cari_banka_swiftkodu10, 
+    cari_EftHesapNum, cari_Ana_cari_kodu, cari_satis_isk_kod, 
+    cari_sektor_kodu, cari_bolge_kodu, cari_grup_kodu, cari_temsilci_kodu, 
+    cari_muhartikeli, cari_firma_acik_kapal, cari_BUV_tabi_fl, 
+    cari_cari_kilitli_flg, cari_etiket_bas_fl, cari_Detay_incele_flg, 
+    cari_efatura_fl, cari_POS_ongpesyuzde, cari_POS_ongtaksayi, 
+    cari_POS_ongIskOran, cari_kaydagiristarihi, cari_KabEdFCekTutar, 
+    cari_hal_caritip, cari_HalKomYuzdesi, cari_TeslimSuresi, 
+    cari_wwwadresi, cari_EMail, cari_CepTel, cari_VarsayilanGirisDepo, 
+    cari_VarsayilanCikisDepo, cari_Portal_Enabled, cari_Portal_PW, 
+    cari_BagliOrtaklisa_Firma, cari_kampanyakodu, 
+    cari_b_bakiye_degerlendirilmesin_fl, cari_a_bakiye_degerlendirilmesin_fl, 
+    cari_b_irsbakiye_degerlendirilmesin_fl, cari_a_irsbakiye_degerlendirilmesin_fl, 
+    cari_b_sipbakiye_degerlendirilmesin_fl, cari_a_sipbakiye_degerlendirilmesin_fl, 
+    cari_KrediRiskTakibiVar_flg, cari_ufrs_fark_muh_kod, 
+    cari_ufrs_fark_muh_kod1, cari_ufrs_fark_muh_kod2, cari_odeme_sekli, 
+    cari_TeminatMekAlacakMuhKodu, cari_TeminatMekAlacakMuhKodu1, 
+    cari_TeminatMekAlacakMuhKodu2, cari_TeminatMekBorcMuhKodu, 
+    cari_TeminatMekBorcMuhKodu1, cari_TeminatMekBorcMuhKodu2, 
+    cari_VerilenDepozitoTeminatMuhKodu, cari_VerilenDepozitoTeminatMuhKodu1, 
+    cari_VerilenDepozitoTeminatMuhKodu2, cari_AlinanDepozitoTeminatMuhKodu, 
+    cari_AlinanDepozitoTeminatMuhKodu1, cari_AlinanDepozitoTeminatMuhKodu2, 
+    cari_def_efatura_cinsi, cari_otv_tevkifatina_tabii_fl, cari_KEP_adresi, 
+    cari_efatura_baslangic_tarihi, cari_mutabakat_mail_adresi, cari_mersis_no, 
+    cari_istasyon_cari_kodu, cari_gonderionayi_sms, cari_gonderionayi_email, 
+    cari_eirsaliye_fl, cari_eirsaliye_baslangic_tarihi, cari_vergidairekodu, 
+    cari_CRM_sistemine_aktar_fl, cari_efatura_xslt_dosya, cari_pasaport_no, 
+    cari_kisi_kimlik_bilgisi_aciklama_turu, cari_kisi_kimlik_bilgisi_diger_aciklama, 
+    cari_uts_kurum_no, cari_kamu_kurumu_fl, cari_earsiv_xslt_dosya, 
+    cari_Perakende_fl, cari_yeni_dogan_mi, cari_eirsaliye_xslt_dosya, 
+    cari_def_eirsaliye_cinsi, cari_ozel_butceli_kurum_carisi, 
+    cari_nakakincelenmesi, cari_vergimukellefidegil_mi, 
+    cari_tasiyicifirma_cari_kodu, cari_nacekodu_1, cari_nacekodu_2, 
+    cari_nacekodu_3, cari_sirket_turu, cari_baba_adi, cari_faal_terk
+)  (SELECT 
+    NEWID(), -- cari_Guid
+    0, -- cari_DBCno
+    0, -- cari_SpecRECno
+    0, -- cari_iptal
+    31, -- cari_fileid
+    0, -- cari_hidden
+    0, -- cari_kilitli
+    0, -- cari_degisti
+    0, -- cari_checksum
+    0, -- cari_create_user
+    GETDATE(), -- cari_create_date
+    0, -- cari_lastup_user
+    GETDATE(), -- cari_lastup_date
+    N'', -- cari_special1
+    N'', -- cari_special2
+    N'', -- cari_special3
+    %cari_kod%, -- cari_kod
+    %cari_ad%, -- cari_unvan1
+    N'.', -- cari_unvan2
+    0, -- cari_hareket_tipi
+    0, -- cari_baglanti_tipi
+    0, -- cari_stok_alim_cinsi
+    0, -- cari_stok_satim_cinsi
+    %muhasebe_kodu%, -- cari_muh_kod
+    N'', -- cari_muh_kod1
+    N'', -- cari_muh_kod2
+    0, -- cari_doviz_cinsi
+    255, -- cari_doviz_cinsi1
+    255, -- cari_doviz_cinsi2
+    25.000000000000, -- cari_vade_fark_yuz
+    0, -- cari_vade_fark_yuz1
+    0, -- cari_vade_fark_yuz2
+    1, -- cari_KurHesapSekli
+    %vergi_daire_bos%, -- cari_vdaire_adi
+    %vergi_daire_no%, -- cari_vdaire_no
+    N'', -- cari_sicil_no
+    N'', -- cari_VergiKimlikNo
+    1, -- cari_satis_fk
+    0, -- cari_odeme_cinsi
+    0, -- cari_odeme_gunu
+    0, -- cari_odemeplan_no
+    0, -- cari_opsiyon_gun
+    0, -- cari_cariodemetercihi
+    1, -- cari_fatura_adres_no
+    1, -- cari_sevk_adres_no
+    N'', -- cari_banka_tcmb_kod1
+    N'', -- cari_banka_tcmb_subekod1
+    N'', -- cari_banka_tcmb_ilkod1
+    N'', -- cari_banka_hesapno1
+    N'', -- cari_banka_swiftkodu1
+    N'', -- cari_banka_tcmb_kod2
+    N'', -- cari_banka_tcmb_subekod2
+    N'', -- cari_banka_tcmb_ilkod2
+    N'', -- cari_banka_hesapno2
+    N'', -- cari_banka_swiftkodu2
+    N'', -- cari_banka_tcmb_kod3
+    N'', -- cari_banka_tcmb_subekod3
+    N'', -- cari_banka_tcmb_ilkod3
+    N'', -- cari_banka_hesapno3
+    N'', -- cari_banka_swiftkodu3
+    N'', -- cari_banka_tcmb_kod4
+    N'', -- cari_banka_tcmb_subekod4
+    N'', -- cari_banka_tcmb_ilkod4
+    N'', -- cari_banka_hesapno4
+    N'', -- cari_banka_swiftkodu4
+    N'', -- cari_banka_tcmb_kod5
+    N'', -- cari_banka_tcmb_subekod5
+    N'', -- cari_banka_tcmb_ilkod5
+    N'', -- cari_banka_hesapno5
+    N'', -- cari_banka_swiftkodu5
+    N'', -- cari_banka_tcmb_kod6
+    N'', -- cari_banka_tcmb_subekod6
+    N'', -- cari_banka_tcmb_ilkod6
+    N'', -- cari_banka_hesapno6
+    N'', -- cari_banka_swiftkodu6
+    N'', -- cari_banka_tcmb_kod7
+    N'', -- cari_banka_tcmb_subekod7
+    N'', -- cari_banka_tcmb_ilkod7
+    N'', -- cari_banka_hesapno7
+    N'', -- cari_banka_swiftkodu7
+    N'', -- cari_banka_tcmb_kod8
+    N'', -- cari_banka_tcmb_subekod8
+    N'', -- cari_banka_tcmb_ilkod8
+    N'', -- cari_banka_hesapno8
+    N'', -- cari_banka_swiftkodu8
+    N'', -- cari_banka_tcmb_kod9
+    N'', -- cari_banka_tcmb_subekod9
+    N'', -- cari_banka_tcmb_ilkod9
+    N'', -- cari_banka_hesapno9
+    N'', -- cari_banka_swiftkodu9
+    N'', -- cari_banka_tcmb_kod10
+    N'', -- cari_banka_tcmb_subekod10
+    N'', -- cari_banka_tcmb_ilkod10
+    N'', -- cari_banka_hesapno10
+    N'', -- cari_banka_swiftkodu10
+    1, -- cari_EftHesapNum
+    N'', -- cari_Ana_cari_kodu
+    N'', -- cari_satis_isk_kod
+    'BAKIM', -- cari_sektor_kodu
+    %bolge%, -- cari_bolge_kodu
+    N'', -- cari_grup_kodu
+    %temsilci%, -- cari_temsilci_kodu
+    N'', -- cari_muhartikeli
+    0, -- cari_firma_acik_kapal
+    0, -- cari_BUV_tabi_fl
+    0, -- cari_cari_kilitli_flg
+    0, -- cari_etiket_bas_fl
+    0, -- cari_Detay_incele_flg
+    0, -- cari_efatura_fl
+    0, -- cari_POS_ongpesyuzde
+    0, -- cari_POS_ongtaksayi
+    0, -- cari_POS_ongIskOran
+    GETDATE(), -- cari_kaydagiristarihi
+    0, -- cari_KabEdFCekTutar
+    0, -- cari_hal_caritip
+    0, -- cari_HalKomYuzdesi
+    0, -- cari_TeslimSuresi
+    N'', -- cari_wwwadresi
+    %yetkili_mail%, -- cari_EMail
+    %yetkili_tel%, -- cari_CepTel
+    N'', -- cari_VarsayilanGirisDepo
+    N'', -- cari_VarsayilanCikisDepo
+    0, -- cari_Portal_Enabled
+    N'', -- cari_Portal_PW
+    N'', -- cari_BagliOrtaklisa_Firma
+    N'', -- cari_kampanyakodu
+    0, -- cari_b_bakiye_degerlendirilmesin_fl
+    0, -- cari_a_bakiye_degerlendirilmesin_fl
+    0, -- cari_b_irsbakiye_degerlendirilmesin_fl
+    0, -- cari_a_irsbakiye_degerlendirilmesin_fl
+    0, -- cari_b_sipbakiye_degerlendirilmesin_fl
+    0, -- cari_a_sipbakiye_degerlendirilmesin_fl
+    0, -- cari_KrediRiskTakibiVar_flg
+    N'', -- cari_ufrs_fark_muh_kod
+    N'', -- cari_ufrs_fark_muh_kod1
+    N'', -- cari_ufrs_fark_muh_kod2
+    0, -- cari_odeme_sekli
+    N'910', -- cari_TeminatMekAlacakMuhKodu
+    N'', -- cari_TeminatMekAlacakMuhKodu1
+    N'', -- cari_TeminatMekAlacakMuhKodu2
+    N'912', -- cari_TeminatMekBorcMuhKodu
+    N'', -- cari_TeminatMekBorcMuhKodu1
+    N'', -- cari_TeminatMekBorcMuhKodu2
+    N'226', -- cari_VerilenDepozitoTeminatMuhKodu
+    N'', -- cari_VerilenDepozitoTeminatMuhKodu1
+    N'', -- cari_VerilenDepozitoTeminatMuhKodu2
+    N'326', -- cari_AlinanDepozitoTeminatMuhKodu
+    N'', -- cari_AlinanDepozitoTeminatMuhKodu1
+    N'', -- cari_AlinanDepozitoTeminatMuhKodu2
+    0, -- cari_def_efatura_cinsi
+    0, -- cari_otv_tevkifatina_tabii_fl
+    N'', -- cari_KEP_adresi
+    '18991231', -- cari_efatura_baslangic_tarihi
+    N'', -- cari_mutabakat_mail_adresi
+    N'', -- cari_mersis_no
+    N'', -- cari_istasyon_cari_kodu
+    0, -- cari_gonderionayi_sms
+    0, -- cari_gonderionayi_email
+    0, -- cari_eirsaliye_fl
+    '18991231', -- cari_eirsaliye_baslangic_tarihi
+    %vergi_daire_kodu%, -- cari_vergidairekodu
+    0, -- cari_CRM_sistemine_aktar_fl
+    N'', -- cari_efatura_xslt_dosya
+    N'', -- cari_pasaport_no
+    0, -- cari_kisi_kimlik_bilgisi_aciklama_turu
+    N'', -- cari_kisi_kimlik_bilgisi_diger_aciklama
+    0, -- cari_uts_kurum_no
+    0, -- cari_kamu_kurumu_fl
+    N'', -- cari_earsiv_xslt_dosya
+    0, -- cari_Perakende_fl
+    0, -- cari_yeni_dogan_mi
+    N'', -- cari_eirsaliye_xslt_dosya
+    0, -- cari_def_eirsaliye_cinsi
+    0, -- cari_ozel_butceli_kurum_carisi
+    0, -- cari_nakakincelenmesi
+    0, -- cari_vergimukellefidegil_mi
+    N'', -- cari_tasiyicifirma_cari_kodu
+    N'', -- cari_nacekodu_1
+    N'', -- cari_nacekodu_2
+    N'', -- cari_nacekodu_3
+    N'', -- cari_sirket_turu
+    N'', -- cari_baba_adi
+    0 -- cari_faal_terk
+);
