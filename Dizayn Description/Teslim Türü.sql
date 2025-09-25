@@ -1,0 +1,2 @@
+ItemNode3 =Invoice/InvoiceLine/Item/Description
+ItemData3 =%%SQL.SELECT tslt_ismi FROM TESLIM_TURLERI LEFT JOIN SIPARISLER ON sip_teslimturu=tslt_kod LEFT JOIN CARI_HESAP_HAREKETLERI ON sip_Guid=cha_sip_uid where cha_Guid=@CGuid%%
