@@ -1,0 +1,2 @@
+ItemNode1=Invoice/Invoiceline/Item/Description
+ItemData1=%%SQL.SELECT pl_partikodu FROM STOK_HAREKETLERI LEFT OUTER JOIN PARTILOT ON sth_parti_kodu = pl_partikodu AND sth_lot_no = pl_lotno LEFT OUTER JOIN STOKLAR ON sto_kod = sth_stok_kod WHERE sth_Guid = @SGuid%%
