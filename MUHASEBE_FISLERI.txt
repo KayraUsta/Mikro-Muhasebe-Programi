@@ -1,0 +1,153 @@
+INSERT INTO [dbo].[MUHASEBE_FISLERI]
+(
+    [fis_Guid],
+    [fis_DBCno],
+    [fis_SpecRECno],
+    [fis_iptal],
+    [fis_fileid],
+    [fis_hidden],
+    [fis_kilitli],
+    [fis_degisti],
+    [fis_checksum],
+    [fis_create_user],
+    [fis_create_date],
+    [fis_lastup_user],
+    [fis_lastup_date],
+    [fis_special1],
+    [fis_special2],
+    [fis_special3],
+    [fis_MainProgramNo],
+    [fis_VersionNo],
+    [fis_MenuNo],
+    [fis_MikroSpecial1],
+    [fis_MikroSpecial2],
+    [fis_MikroSpecial3],
+    [fis_ExternalProgramType],
+    [fis_ExternalProgramId],
+    [fis_Hash],
+    [fis_firmano],
+    [fis_subeno],
+    [fis_maliyil],
+    [fis_tarih],
+    [fis_sira_no],
+    [fis_tur],
+    [fis_hesap_kod],
+    [fis_satir_no],
+    [fis_aciklama1],
+    [fis_meblag0],
+    [fis_meblag1],
+    [fis_meblag2],
+    [fis_meblag3],
+    [fis_meblag4],
+    [fis_meblag5],
+    [fis_meblag6],
+    [fis_sorumluluk_kodu],
+    [fis_ticari_tip],
+    [fis_ticari_uid],
+    [fis_kurfarkifl],
+    [fis_ticari_evraktip],
+    [fis_tic_evrak_seri],
+    [fis_tic_evrak_sira],
+    [fis_tic_belgeno],
+    [fis_tic_belgetarihi],
+    [fis_yevmiye_no],
+    [fis_katagori],
+    [fis_evrak_DBCno],
+    [fis_fmahsup_tipi],
+    [fis_fozelmahkod],
+    [fis_grupkodu],
+    [fis_aktif_pasif],
+    [fis_proje_kodu],
+    [fis_HareketGrupKodu1],
+    [fis_HareketGrupKodu2],
+    [fis_HareketGrupKodu3],
+    [fis_ticari_hubid],
+    [fis_ticari_hubglbid]
+)
+SELECT
+    NEWID(),
+    0,
+    0,
+    0,
+    2,
+    0,
+    0,
+    0,
+    0,
+    99,
+    GETDATE(),
+    99,
+    GETDATE(),
+    N'',
+    N'',
+    N'',
+    21,
+    N'17.04b',
+    N'62205',
+    N'',
+    N'',
+    N'',
+    0,
+    N'',
+    0,
+    0,
+    0,
+    YEAR(GETDATE()),                          -- fis_maliyil
+    %issuedate%,                              -- fis_tarih
+    (SELECT TOP 1 fis_sira_no+1 FROM MUHASEBE_FISLERI ORDER BY fis_sira_no DESC),
+    0,
+    dt.MasrafIsmi,
+    dt.SatirNo,                               -- fis_satir_no
+    dt.Aciklama,
+    dt.KDVdahilTutar,                         -- fis_meblag0
+    0,
+    dt.KDVdahilTutar,                         -- fis_meblag2
+    0, 0, 0, 0,
+    %sorumluluk_merkezi%,
+    2,                                        -- fis_ticari_tip
+    cha.cha_Guid,                             -- fis_ticari_uid (eşleşmeden geliyor)
+    0,
+    0,                                        -- fis_ticari_evraktip
+    N'EFLMSRF',
+    (SELECT TOP 1 cha_evrakno_sira 
+     FROM CARI_HESAP_HAREKETLERI 
+     WHERE cha_belge_no = %gibno%),           -- fis_tic_evrak_sira
+    %gibno%,
+    %issuedate%,
+    (SELECT TOP 1 fis_yevmiye_no+1 FROM MUHASEBE_FISLERI ORDER BY fis_yevmiye_no DESC),
+    0, 0, 0,
+    N'', N'', 0,
+    %proje%,
+    N'', N'', N'', N'', N''
+FROM (
+    SELECT 
+        ROW_NUMBER() OVER (ORDER BY (SELECT NULL)) - 1 AS SatirNo,
+        x.Rec.query('./ColumnData[1]').value('.', 'NVARCHAR(MAX)') AS MasrafIsmi,
+        x.Rec.query('./ColumnData[2]').value('.', 'NVARCHAR(MAX)') AS MalHizmet,
+        x.Rec.query('./ColumnData[3]').value('.', 'float') AS Miktar,
+        x.Rec.query('./ColumnData[4]').value('.', 'float') AS KDVharic,
+        x.Rec.query('./ColumnData[5]').value('.', 'NVARCHAR(MAX)') AS KDV,
+        x.Rec.query('./ColumnData[6]').value('.', 'float') AS KDVTutar,
+        x.Rec.query('./ColumnData[7]').value('.', 'float') AS KDVdahilTutar,
+        x.Rec.query('./ColumnData[8]').value('.', 'NVARCHAR(MAX)') AS Aciklama
+    FROM (
+        SELECT CAST(VALUE AS XML) AS xdt 
+        FROM EFlow.dbo.INST_DATA_MEMO
+        WHERE DID = 14274 AND CIID = %surec_numarasi%
+    ) e
+    CROSS APPLY e.xdt.nodes('/LineItemTable/TableData/Data') AS x(Rec)
+) dt
+LEFT JOIN (
+    SELECT 
+        x.Rec.query('./ColumnData[1]').value('.', 'UNIQUEIDENTIFIER') AS cha_Guid,
+        x.Rec.query('./ColumnData[2]').value('.', 'NVARCHAR(MAX)') AS cha_satir_no,
+        x.Rec.query('./ColumnData[3]').value('.', 'NVARCHAR(MAX)') AS cha_belge_no
+    FROM (
+        SELECT CAST(VALUE AS XML) AS xdt 
+        FROM EFlow.dbo.INST_DATA_MEMO
+        WHERE DID = 10131 AND CIID = %surec_numarasi%
+    ) e
+    CROSS APPLY e.xdt.nodes('/LineItemTable/TableData/Data') AS x(Rec)
+) cha
+    ON cha.cha_satir_no = CAST(dt.SatirNo AS NVARCHAR(MAX))
+   AND cha.cha_belge_no = %gibno%;
